@@ -102,8 +102,10 @@ jobs:
             gh pr close "${{ env.formatter_branch }}" -d
           fi
         else
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
           git add -u
-          git commit --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" -m "$base_branch - Automatic JuliaFormatter.jl"
+          git commit -m "$base_branch - Automatic JuliaFormatter.jl"
           git push -f -u origin "${{ env.formatter_branch }}"
           if q=`gh pr view --json state --template '{{.state}}'` && test "$q" != "MERGED"; then
             if test "$q" = "OPEN"; then

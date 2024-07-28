@@ -103,7 +103,7 @@ jobs:
           fi
         else
           git add -u
-          git commit -m "$base_branch - Automatic JuliaFormatter.jl"
+          git commit --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" -m "$base_branch - Automatic JuliaFormatter.jl"
           git push -f -u origin "${{ env.formatter_branch }}"
           if q=`gh pr view --json state --template '{{.state}}'` && test "$q" != "MERGED"; then
             if test "$q" = "OPEN"; then

@@ -63,7 +63,7 @@ jobs:
           path: "coverage-lcov.info"
   formatter:
     name: Run JuliaFormatter and create pull request
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-latest
     if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.isDraft}}
     steps:
     - name: Set inputs for push or pull request event
@@ -120,8 +120,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   docs-build:
     name: Build documentation
-    # runs-on: ubuntu-latest
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-latest
     permissions: write-all
     if: ${{ !cancelled() }}
     needs: test
@@ -167,7 +166,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-latest
     permissions: write-all
     needs: docs-build
     steps:

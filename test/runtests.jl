@@ -4,12 +4,16 @@ using Aqua
 using Documenter
 
 @testset "Code quality (Aqua.jl)" begin
-    Aqua.test_all(JutulModelConfigurations; ambiguities=false)
+    Aqua.test_all(JutulModelConfigurations; ambiguities = false)
     Aqua.test_ambiguities(JutulModelConfigurations)
 end
 
 DocMeta.setdocmeta!(
-    JutulModelConfigurations, :DocTestSetup, :(using JutulModelConfigurations, Test); recursive = true)
+    JutulModelConfigurations,
+    :DocTestSetup,
+    :(using JutulModelConfigurations, Test);
+    recursive = true,
+)
 doctest(JutulModelConfigurations; manual = false)
 
 examples_dir = joinpath(@__DIR__, "..", "examples")

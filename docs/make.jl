@@ -29,8 +29,7 @@ end
 build_examples = true
 build_notebooks = true
 build_scripts = true
-examples = [
-]
+examples = []
 examples_markdown = []
 
 function update_header(content, pth)
@@ -77,7 +76,12 @@ for (ex, pth) in examples
     end
 end
 
-DocMeta.setdocmeta!(JutulModelConfigurations, :DocTestSetup, :(using JutulModelConfigurations, Test); recursive = true)
+DocMeta.setdocmeta!(
+    JutulModelConfigurations,
+    :DocTestSetup,
+    :(using JutulModelConfigurations, Test);
+    recursive = true,
+)
 makedocs(;
     modules = [JutulModelConfigurations],
     authors = "Grant Bruer gbruer15@gmail.com and contributors",
@@ -88,13 +92,13 @@ makedocs(;
         repolink = "https://github.com/gbruer15/JutulModelConfigurations.jl",
         canonical = "https://gbruer15.github.io/JutulModelConfigurations.jl",
         edit_link = "main",
-        assets = String[]
+        assets = String[],
     ),
     repo = "github.com/gbruer15/JutulModelConfigurations.jl",
     pages = [
         "Home" => "index.md",
         "Examples" => examples_markdown,
-        "Coverage" => "coverage/index.md"
+        "Coverage" => "coverage/index.md",
     ],
-    doctest = false
+    doctest = false,
 )

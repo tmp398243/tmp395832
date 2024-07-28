@@ -26,7 +26,8 @@ jobs:
     timeout-minutes: 60
     permissions: # needed to allow julia-actions/cache to proactively delete old caches that it has created
       actions: write
-      contents: read
+      contents: write
+      pull-requests: write
     strategy:
       fail-fast: false
       matrix:

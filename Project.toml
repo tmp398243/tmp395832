@@ -1,0 +1,13 @@
+name = "JutulModelConfigurations"
+uuid = "da9e779f-cf6d-4bf6-baf7-0ed062534939"
+authors = ["Grant Bruer gbruer15@gmail.com and contributors"]
+version = "1.0.0-DEV"
+
+[deps]
+Configurations = "5218b696-f38b-4ac9-8b61-a12ec717816d"
+Jutul = "2b460a1a-8a2b-45b2-b125-b5c536396eb9"
+
+[compat]
+Configurations = "v0.17"
+Jutul = "v0.2.34"
+julia = "1.8"

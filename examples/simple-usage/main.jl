@@ -4,10 +4,7 @@ using JutulDarcy.Jutul
 
 Darcy, bar, kg, meter, day = si_units(:darcy, :bar, :kilogram, :meter, :day)
 options = JutulOptions(
-    mesh = MeshOptions(
-        n = (10, 1, 5),
-        d = (1e1, 1e0, 1e0),
-    ),
+    mesh = MeshOptions(n = (10, 1, 5), d = (1e1, 1e0, 1e0)),
     porosity = FieldOptions(value = 0.3),
     permeability = FieldOptions(value = 1.0Darcy),
     temperature = FieldOptions(value = convert_to_si(30.0, :Celsius)),
@@ -24,9 +21,16 @@ mesh = UnstructuredMesh(CartesianMesh(options.mesh))
 points = mesh.node_points
 for (i, pt) in enumerate(points)
     x, y, z = pt
-    x_u = 2*π*x/1000.0
+    x_u = 2 * π * x / 1000.0
     w = 0.2
-    dz = 0.05*x + w*(30*sin(2.0*x_u) + 20*sin(5.0*x_u) + 10*sin(10.0*x_u) + 5*sin(25.0*x_u))
+    dz =
+        0.05 * x +
+        w * (
+            30 * sin(2.0 * x_u) +
+            20 * sin(5.0 * x_u) +
+            10 * sin(10.0 * x_u) +
+            5 * sin(25.0 * x_u)
+        )
     points[i] = pt + [0, 0, dz]
 end
 # ## Set up simulation model
@@ -43,7 +47,7 @@ model, parameters = setup_reservoir_model(domain, :co2brine, wells = Injector);
 # We find the left and right boundary of the model and increase the volume of
 # those cells. This mimicks a constant pressure boundary condition.
 boundary = Int[]
-for cell in 1:number_of_cells(mesh)
+for cell = 1:number_of_cells(mesh)
     I, J, K = cell_ijk(mesh, cell)
     if I == 1 || I == options.mesh.n[1]
         push!(boundary, cell)
@@ -60,12 +64,10 @@ nstep = 25
 nstep_shut = 25
 dt_inject = fill(365.0day, nstep)
 pv = pore_volume(model, parameters)
-inj_rate = 0.0075*sum(pv)/sum(dt_inject)
+inj_rate = 0.0075 * sum(pv) / sum(dt_inject)
 
 rate_target = TotalRateTarget(inj_rate)
-I_ctrl = InjectorControl(rate_target, [0.0, 1.0],
-    density = 900.0,
-)
+I_ctrl = InjectorControl(rate_target, [0.0, 1.0], density = 900.0)
 # Set up forces for use in injection
 controls = Dict(:Injector => I_ctrl)
 forces_inject = setup_reservoir_forces(model, control = controls)
@@ -76,17 +78,17 @@ dt_shut = fill(365.0day, nstep_shut);
 dt = vcat(dt_inject, dt_shut)
 forces = vcat(fill(forces_inject, nstep), fill(forces_shut, nstep_shut));
 # ## Set up initial state
-state0 = setup_reservoir_state(model,
-    Pressure = 200bar,
-    OverallMoleFractions = [1.0, 0.0],
-)
+state0 = setup_reservoir_state(model, Pressure = 200bar, OverallMoleFractions = [1.0, 0.0])
 # ## Simulate the schedule
 # We set a maximum internal time-step of 30 days to ensure smooth convergence
 # and reduce numerical diffusion.
-wd, states, t = simulate_reservoir(state0, model, dt,
+wd, states, t = simulate_reservoir(
+    state0,
+    model,
+    dt,
     parameters = parameters,
     forces = forces,
-    max_timestep = 30day
+    max_timestep = 30day,
 )
 # ## Plot the density of brine
 # The density of brine depends on the CO2 concentration and gives a good

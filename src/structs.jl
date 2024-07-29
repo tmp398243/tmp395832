@@ -50,10 +50,7 @@ export WellOptions, WellRateOptions, WellPressureOptions
         loc = [1875.0, 50.0],
         search_zrange = [1693.75, 1812.5],
         length = 37.5,
-        control = WellRateOptions(
-            fluid_density = 7.766e2,
-            rate_mtons_year = 0.8,
-        ),
+        control = WellRateOptions(fluid_density = 7.766e2, rate_mtons_year = 0.8),
     )
 
     production = WellOptions(
@@ -75,44 +72,44 @@ end
 
 @option struct FluidOptions
     "Identifier for viewing options"
-    name
+    name::Any
 
     "Pascal seconds (decapoise) Reference: https://github.com/lidongzh/FwiFlow.jl"
-    viscosity
+    viscosity::Any
 
     "kg/m^3"
-    density
+    density::Any
 
     "1 / Pascals (should be reciprocal of bulk modulus)"
-    compressibility
+    compressibility::Any
 end
 
 @option struct FieldOptions
     type = "constant"
-    value
+    value::Any
     pad_boundary = false
     pad_value = 0.0
 end
 
 @option struct WellOptions
     active = true
-    loc
-    search_zrange
+    loc::Any
+    search_zrange::Any
 
     "meters"
-    length
+    length::Any
 
     "kg/m^3"
-    control
+    control::Any
 end
 
 @option struct WellRateOptions
     "kg/m^3"
-    fluid_density
-    rate_mtons_year
+    fluid_density::Any
+    rate_mtons_year::Any
 end
 
 @option struct WellPressureOptions
     "Pa"
-    bottom_hole_pressure_target
+    bottom_hole_pressure_target::Any
 end

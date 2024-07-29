@@ -66,7 +66,7 @@ for (ex, pth) in examples
         rm(joinpath(out_dir, "main.jl"))
 
         # Build outputs.
-        Literate.markdown(in_pth, out_dir; name = "index", preprocess = upd, execute = true)
+        Literate.markdown(in_pth, out_dir; name="index", preprocess=upd, execute=true)
         if build_notebooks
             Literate.notebook(in_pth, out_dir)
         end
@@ -80,25 +80,25 @@ DocMeta.setdocmeta!(
     JutulModelConfigurations,
     :DocTestSetup,
     :(using JutulModelConfigurations, Test);
-    recursive = true,
+    recursive=true,
 )
 makedocs(;
-    modules = [JutulModelConfigurations],
-    authors = "Grant Bruer gbruer15@gmail.com and contributors",
-    sitename = "JutulModelConfigurations.jl",
-    source = DOC_STAGE,
-    build = DOC_BUILD,
-    format = Documenter.HTML(;
-        repolink = "https://github.com/gbruer15/JutulModelConfigurations.jl",
-        canonical = "https://gbruer15.github.io/JutulModelConfigurations.jl",
-        edit_link = "main",
-        assets = String[],
+    modules=[JutulModelConfigurations],
+    authors="Grant Bruer gbruer15@gmail.com and contributors",
+    sitename="JutulModelConfigurations.jl",
+    source=DOC_STAGE,
+    build=DOC_BUILD,
+    format=Documenter.HTML(;
+        repolink="https://github.com/gbruer15/JutulModelConfigurations.jl",
+        canonical="https://gbruer15.github.io/JutulModelConfigurations.jl",
+        edit_link="main",
+        assets=String[],
     ),
-    repo = "github.com/gbruer15/JutulModelConfigurations.jl",
-    pages = [
+    repo="github.com/gbruer15/JutulModelConfigurations.jl",
+    pages=[
         "Home" => "index.md",
         "Examples" => examples_markdown,
         "Coverage" => "coverage/index.md",
     ],
-    doctest = false,
+    doctest=false,
 )

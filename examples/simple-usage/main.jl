@@ -5,7 +5,7 @@ using JutulDarcy.Jutul
 Darcy, bar, kg, meter, day = si_units(:darcy, :bar, :kilogram, :meter, :day)
 options = JutulOptions(
     mesh = MeshOptions(
-        n = (100, 1, 50),
+        n = (10, 1, 5),
         d = (1e1, 1e0, 1e0),
     ),
     porosity = FieldOptions(value = 0.3),

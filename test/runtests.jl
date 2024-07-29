@@ -1,3 +1,4 @@
+import Pkg
 using JutulModelConfigurations
 using Test
 using Aqua
@@ -20,7 +21,15 @@ examples_dir = joinpath(@__DIR__, "..", "examples")
 for example in readdir(examples_dir)
     example_path = joinpath(examples_dir, example)
     @show example_path
+    orig_project = Base.active_project()
     @testset "Example: $(example)" begin
-        include(joinpath(example_path, "main.jl"))
+        if isdir(example_path)
+            Pkg.activate(example_path)
+        end
+        try
+            include(joinpath(example_path, "main.jl"))
+        finally
+            Pkg.activate(orig_project)
+        end
     end
 end

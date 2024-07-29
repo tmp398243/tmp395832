@@ -37,7 +37,7 @@ end
 #
 # Note that this model can be run with a thermal mode by setting
 domain = reservoir_domain(mesh, options)
-Injector = setup_well(domain, (65, 1, 1), name = :Injector)
+Injector = setup_well(domain, (6, 1, 1), name = :Injector)
 model, parameters = setup_reservoir_model(domain, :co2brine, wells = Injector);
 # ## Find the boundary and set increased volume
 # We find the left and right boundary of the model and increase the volume of

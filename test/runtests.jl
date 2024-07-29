@@ -25,6 +25,7 @@ for example in readdir(examples_dir)
     @testset "Example: $(example)" begin
         if isdir(example_path)
             Pkg.activate(example_path)
+            Pkg.develop(path=joinpath(@__DIR__, ".."))
             Pkg.instantiate()
         end
         try

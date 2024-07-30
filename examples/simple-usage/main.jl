@@ -76,7 +76,7 @@ for cell in 1:number_of_cells(mesh)
     end
 end
 parameters[:Reservoir][:FluidVolume][boundary] *= 1000;
-# ## Plot the model
+## Plot the model
 ## plot_reservoir(model)
 # ## Set up schedule
 # We set up 25 years of injection and 25 years of migration where the well is
@@ -93,23 +93,25 @@ wd, states, t = simulate_reservoir(
     state0, model, dt; parameters=parameters, forces=forces, max_timestep=30day
 )
 # ## Plot the density of brine
-# The density of brine depends on the CO2 concentration and gives a good
-# visualization of where the mass of CO2 exists.
-## using GLMakie
-## function plot_co2!(fig, ix, x, title = "")
-##     ax = Axis3(fig[ix, 1],
-##         zreversed = true,
-##         azimuth = -0.51π,
-##         elevation = 0.05,
-##         aspect = (1.0, 1.0, 0.3),
-##         title = title)
-##     plt = plot_cell_data!(ax, mesh, x, colormap = :seaborn_icefire_gradient)
-##     Colorbar(fig[ix, 2], plt)
-## end
-## fig = Figure(size = (900, 1200))
-## for (i, step) in enumerate([1, 5, nstep, nstep+nstep_shut])
-##     plot_co2!(fig, i, states[step][:PhaseMassDensities][1, :], "Brine density report step $step/$(nstep+nstep_shut)")
-## end
-## fig
-# ## Plot result in interactive viewer
-## plot_reservoir(model, states)
+## The density of brine depends on the CO2 concentration and gives a good
+## visualization of where the mass of CO2 exists.
+using GLMakie
+function plot_co2!(fig, ix, x, title = "")
+    ax = Axis3(fig[ix, 1],
+        zreversed = true,
+        azimuth = -0.51π,
+        elevation = 0.05,
+        aspect = (1.0, 1.0, 0.3),
+        title = title)
+    plt = plot_cell_data!(ax, mesh, x, colormap = :seaborn_icefire_gradient)
+    Colorbar(fig[ix, 2], plt)
+end
+fig = Figure(size = (900, 1200))
+nstep = options.time[1].steps
+nstep_shut = options.time[2].steps
+for (i, step) in enumerate([1, 5, nstep, nstep+nstep_shut])
+    plot_co2!(fig, i, states[step][:PhaseMassDensities][1, :], "Brine density report step $step/$(nstep+nstep_shut)")
+end
+fig
+## Plot result in interactive viewer
+plot_reservoir(model, states)

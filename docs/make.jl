@@ -1,4 +1,4 @@
-import Pkg
+using Pkg: Pkg
 using JutulModelConfigurations
 using Documenter
 
@@ -30,9 +30,7 @@ end
 build_examples = true
 build_notebooks = true
 build_scripts = true
-examples = [
-    "Simple Usage" => "simple-usage"
-]
+examples = ["Simple Usage" => "simple-usage"]
 examples_markdown = []
 
 function update_header(content, pth)
@@ -68,7 +66,6 @@ for (ex, pth) in examples
         # Copy other files over to out_dir.
         Base.Filesystem.cptree(in_dir, out_dir)
         rm(joinpath(out_dir, "main.jl"))
-
 
         if isdir(in_dir)
             Pkg.activate(in_dir)
@@ -107,7 +104,7 @@ makedocs(;
         canonical="https://gbruer15.github.io/JutulModelConfigurations.jl",
         edit_link="main",
         assets=String[],
-        size_threshold=2 * 2 ^ 20,
+        size_threshold=2 * 2^20,
     ),
     repo="github.com/gbruer15/JutulModelConfigurations.jl",
     pages=[

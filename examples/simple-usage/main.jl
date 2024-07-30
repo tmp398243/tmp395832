@@ -96,21 +96,28 @@ wd, states, t = simulate_reservoir(
 ## The density of brine depends on the CO2 concentration and gives a good
 ## visualization of where the mass of CO2 exists.
 using GLMakie
-function plot_co2!(fig, ix, x, title = "")
-    ax = Axis3(fig[ix, 1],
-        zreversed = true,
-        azimuth = -0.51π,
-        elevation = 0.05,
-        aspect = (1.0, 1.0, 0.3),
-        title = title)
-    plt = plot_cell_data!(ax, mesh, x, colormap = :seaborn_icefire_gradient)
-    Colorbar(fig[ix, 2], plt)
+function plot_co2!(fig, ix, x, title="")
+    ax = Axis3(
+        fig[ix, 1];
+        zreversed=true,
+        azimuth=-0.51π,
+        elevation=0.05,
+        aspect=(1.0, 1.0, 0.3),
+        title=title,
+    )
+    plt = plot_cell_data!(ax, mesh, x; colormap=:seaborn_icefire_gradient)
+    return Colorbar(fig[ix, 2], plt)
 end
-fig = Figure(size = (900, 1200))
+fig = Figure(; size=(900, 1200))
 nstep = options.time[1].steps
 nstep_shut = options.time[2].steps
-for (i, step) in enumerate([1, 5, nstep, nstep+nstep_shut])
-    plot_co2!(fig, i, states[step][:PhaseMassDensities][1, :], "Brine density report step $step/$(nstep+nstep_shut)")
+for (i, step) in enumerate([1, 5, nstep, nstep + nstep_shut])
+    plot_co2!(
+        fig,
+        i,
+        states[step][:PhaseMassDensities][1, :],
+        "Brine density report step $step/$(nstep+nstep_shut)",
+    )
 end
 fig
 ## Plot result in interactive viewer

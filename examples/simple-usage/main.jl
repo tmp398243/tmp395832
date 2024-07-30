@@ -7,6 +7,7 @@ options = JutulOptions(;
     mesh=MeshOptions(; n=(10, 1, 5), d=(1e2, 1e0, 1e1)),
     porosity=FieldOptions(; value=0.3),
     permeability=FieldOptions(; value=1.0Darcy),
+    temperature=FieldOptions(; value=convert_to_si(30.0, :Celsius)),
     rock_density=FieldOptions(; value=30.0),
     rock_heat_capacity=FieldOptions(; value=900.0),
     rock_thermal_conductivity=FieldOptions(; value=3.0),

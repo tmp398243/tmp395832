@@ -3,6 +3,7 @@ using Configurations
 export JutulOptions, MeshOptions, FieldOptions
 export FluidOptions
 export WellOptions, WellRateOptions, WellPressureOptions
+export TimeDependentOptions
 
 @option struct JutulOptions
     mesh = MeshOptions()
@@ -22,18 +23,12 @@ export WellOptions, WellRateOptions, WellPressureOptions
     sat0_radius_cells = 4
     sat0_range = [0.2, 0.8]
 
-    fluid1 = FluidOptions(
-        name = "H₂O",
-        viscosity = 1e-3,
-        density = 1.053e3,
-        compressibility = 3.6563071e-10,
+    fluid1 = FluidOptions(;
+        name="H₂O", viscosity=1e-3, density=1.053e3, compressibility=3.6563071e-10
     )
 
-    fluid2 = FluidOptions(
-        name = "CO₂",
-        viscosity = 1e-4,
-        density = 7.766e2,
-        compressibility = 8e-9,
+    fluid2 = FluidOptions(;
+        name="CO₂", viscosity=1e-4, density=7.766e2, compressibility=8e-9
     )
 
     "m/s^2"
@@ -42,24 +37,39 @@ export WellOptions, WellRateOptions, WellPressureOptions
     "Pascals"
     reference_pressure = 1.5e7
 
-    porosity = FieldOptions(value = 0.3)
-    permeability = FieldOptions(value = 1e-12)
-    temperature = FieldOptions(value = 3e2)
+    porosity = FieldOptions(; value=0.3)
+    permeability = FieldOptions(; value=1e-12)
+    temperature = FieldOptions(; value=3e2)
+    rock_density = FieldOptions(; value=30.0)
+    rock_heat_capacity = FieldOptions(; value=900.0)
+    rock_thermal_conductivity = FieldOptions(; value=3.0)
+    fluid_thermal_conductivity = FieldOptions(; value=0.6)
+    component_heat_capacity = FieldOptions(; value=4184.0)
 
-    injection = WellOptions(
-        loc = [1875.0, 50.0],
-        search_zrange = [1693.75, 1812.5],
-        length = 37.5,
-        control = WellRateOptions(fluid_density = 7.766e2, rate_mtons_year = 0.8),
+    injection = WellOptions(;
+        loc=[1875.0, 50.0], search_zrange=[1693.75, 1812.5], length=37.5, name=:Injector
     )
 
-    production = WellOptions(
-        active = false,
-        loc = [2875.0, 50.0],
-        search_zrange = [1693.75, 1756.25],
-        length = 37.5,
-        control = WellPressureOptions(bottom_hole_pressure_target = 5e6),
+    production = WellOptions(;
+        active=false,
+        loc=[2875.0, 50.0],
+        search_zrange=[1693.75, 1756.25],
+        length=37.5,
+        name=:Producer,
     )
+
+    time = [
+        TimeDependentOptions(;
+            years=1.0,
+            steps=10,
+            controls=[
+                WellRateOptions(;
+                    type="injector", name=:Injector, fluid_density=5e2, rate_mtons_year=1e-3
+                ),
+            ],
+        ),
+        TimeDependentOptions(; years=1.0, steps=10, controls=[]),
+    ]
 end
 
 @option struct MeshOptions
@@ -99,11 +109,12 @@ end
     "meters"
     length::Any
 
-    "kg/m^3"
-    control::Any
+    name::Symbol
 end
 
 @option struct WellRateOptions
+    type
+    name
     "kg/m^3"
     fluid_density::Any
     rate_mtons_year::Any
@@ -112,4 +123,10 @@ end
 @option struct WellPressureOptions
     "Pa"
     bottom_hole_pressure_target::Any
+end
+
+@option struct TimeDependentOptions
+    years::Any
+    steps::Any
+    controls::Any
 end

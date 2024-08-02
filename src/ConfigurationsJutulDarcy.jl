@@ -1,4 +1,4 @@
-module JutulModelConfigurations
+module ConfigurationsJutulDarcy
 
 include("structs.jl")
 
@@ -7,4 +7,4 @@ function __init__()
     @require_extensions
 end
 
-end # module JutulModelConfigurations
+end # module ConfigurationsJutulDarcy

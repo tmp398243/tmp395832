@@ -1,4 +1,4 @@
-using JutulModelConfigurations
+using ConfigurationsJutulDarcy
 using JutulDarcy
 using JutulDarcy.Jutul
 
@@ -77,7 +77,7 @@ for cell in 1:number_of_cells(mesh)
 end
 parameters[:Reservoir][:FluidVolume][boundary] *= 1000;
 ## Plot the model
-## plot_reservoir(model)
+plot_reservoir(model)
 # ## Set up schedule
 # We set up 25 years of injection and 25 years of migration where the well is
 # shut. The density of the injector is set to 900 kg/m^3, which is roughly

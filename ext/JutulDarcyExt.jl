@@ -1,6 +1,6 @@
 module JutulDarcyExt
 
-using JutulModelConfigurations
+using ConfigurationsJutulDarcy
 using JutulDarcy
 using JutulDarcy.Jutul
 

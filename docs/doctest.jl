@@ -1,10 +1,10 @@
 
 using Documenter: DocMeta, doctest
-using JutulModelConfigurations
+using ConfigurationsJutulDarcy
 DocMeta.setdocmeta!(
-    JutulModelConfigurations,
+    ConfigurationsJutulDarcy,
     :DocTestSetup,
-    :(using JutulModelConfigurations, Test);
+    :(using ConfigurationsJutulDarcy, Test);
     recursive=true,
 )
-doctest(JutulModelConfigurations)
+doctest(ConfigurationsJutulDarcy)

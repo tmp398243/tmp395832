@@ -1,21 +1,21 @@
 using Pkg: Pkg
-using JutulModelConfigurations
+using ConfigurationsJutulDarcy
 using Test
 using Aqua
 using Documenter
 
 @testset "Code quality (Aqua.jl)" begin
-    Aqua.test_all(JutulModelConfigurations; ambiguities=false)
-    Aqua.test_ambiguities(JutulModelConfigurations)
+    Aqua.test_all(ConfigurationsJutulDarcy; ambiguities=false)
+    Aqua.test_ambiguities(ConfigurationsJutulDarcy)
 end
 
 DocMeta.setdocmeta!(
-    JutulModelConfigurations,
+    ConfigurationsJutulDarcy,
     :DocTestSetup,
-    :(using JutulModelConfigurations, Test);
+    :(using ConfigurationsJutulDarcy, Test);
     recursive=true,
 )
-doctest(JutulModelConfigurations; manual=false)
+doctest(ConfigurationsJutulDarcy; manual=false)
 
 examples_dir = joinpath(@__DIR__, "..", "examples")
 for example in readdir(examples_dir)

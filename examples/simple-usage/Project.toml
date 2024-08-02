@@ -1,0 +1,7 @@
+[deps]
+GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
+JutulDarcy = "82210473-ab04-4dce-b31b-11573c4f8e0a"
+JutulModelConfigurations = "da9e779f-cf6d-4bf6-baf7-0ed062534939"
+
+[compat]
+JutulDarcy = "0.2.26"

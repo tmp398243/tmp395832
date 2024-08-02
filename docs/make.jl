@@ -1,3 +1,4 @@
+using Pkg: Pkg
 using JutulModelConfigurations
 using Documenter
 
@@ -29,7 +30,7 @@ end
 build_examples = true
 build_notebooks = true
 build_scripts = true
-examples = []
+examples = ["Simple Usage" => "simple-usage"]
 examples_markdown = []
 
 function update_header(content, pth)
@@ -53,6 +54,7 @@ function update_header(content, pth)
 end
 
 mkpath(joinpath(DOC_STAGE, "examples"))
+orig_project = Base.active_project()
 for (ex, pth) in examples
     in_dir = joinpath(REPO_ROOT, "examples", pth)
     in_pth = joinpath(in_dir, "main.jl")
@@ -65,13 +67,22 @@ for (ex, pth) in examples
         Base.Filesystem.cptree(in_dir, out_dir)
         rm(joinpath(out_dir, "main.jl"))
 
-        # Build outputs.
-        Literate.markdown(in_pth, out_dir; name = "index", preprocess = upd, execute = true)
-        if build_notebooks
-            Literate.notebook(in_pth, out_dir)
+        if isdir(in_dir)
+            Pkg.activate(in_dir)
+            Pkg.develop(; path=joinpath(@__DIR__, ".."))
+            Pkg.instantiate()
         end
-        if build_scripts
-            Literate.script(in_pth, out_dir)
+        try
+            # Build outputs.
+            Literate.markdown(in_pth, out_dir; name="index", preprocess=upd, execute=true)
+            if build_notebooks
+                Literate.notebook(in_pth, out_dir)
+            end
+            if build_scripts
+                Literate.script(in_pth, out_dir)
+            end
+        finally
+            Pkg.activate(orig_project)
         end
     end
 end
@@ -80,25 +91,26 @@ DocMeta.setdocmeta!(
     JutulModelConfigurations,
     :DocTestSetup,
     :(using JutulModelConfigurations, Test);
-    recursive = true,
+    recursive=true,
 )
 makedocs(;
-    modules = [JutulModelConfigurations],
-    authors = "Grant Bruer gbruer15@gmail.com and contributors",
-    sitename = "JutulModelConfigurations.jl",
-    source = DOC_STAGE,
-    build = DOC_BUILD,
-    format = Documenter.HTML(;
-        repolink = "https://github.com/gbruer15/JutulModelConfigurations.jl",
-        canonical = "https://gbruer15.github.io/JutulModelConfigurations.jl",
-        edit_link = "main",
-        assets = String[],
+    modules=[JutulModelConfigurations],
+    authors="Grant Bruer gbruer15@gmail.com and contributors",
+    sitename="JutulModelConfigurations.jl",
+    source=DOC_STAGE,
+    build=DOC_BUILD,
+    format=Documenter.HTML(;
+        repolink="https://github.com/gbruer15/JutulModelConfigurations.jl",
+        canonical="https://gbruer15.github.io/JutulModelConfigurations.jl",
+        edit_link="main",
+        assets=String[],
+        size_threshold=2 * 2^20,
     ),
-    repo = "github.com/gbruer15/JutulModelConfigurations.jl",
-    pages = [
+    repo="github.com/gbruer15/JutulModelConfigurations.jl",
+    pages=[
         "Home" => "index.md",
         "Examples" => examples_markdown,
         "Coverage" => "coverage/index.md",
     ],
-    doctest = false,
+    doctest=false,
 )

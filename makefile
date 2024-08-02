@@ -31,9 +31,9 @@ autoformat:
 
 doc: docsetup
 	rm -rf docs/stage docs/build
-	-$(MAKE) coverage-lcov \
+	-$(DOC_PREFIX) $(MAKE) coverage-lcov \
 	&& mkdir -p docs/stage/coverage && cp -r coverage-lcov docs/stage/coverage/site
-	julia --project=docs docs/make.jl
+	$(DOC_PREFIX) julia --project=docs docs/make.jl
 
 doctest:
 	julia --project=docs docs/doctest.jl

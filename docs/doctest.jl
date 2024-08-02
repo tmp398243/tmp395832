@@ -5,6 +5,6 @@ DocMeta.setdocmeta!(
     JutulModelConfigurations,
     :DocTestSetup,
     :(using JutulModelConfigurations, Test);
-    recursive = true,
+    recursive=true,
 )
 doctest(JutulModelConfigurations)

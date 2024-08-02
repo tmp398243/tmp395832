@@ -1,10 +1,10 @@
 module JutulModelConfigurations
 
-using Jutul
-using Configurations
+include("structs.jl")
 
-greet() = print("Hello World!")
-
-export greet
+using PackageExtensionCompat
+function __init__()
+    @require_extensions
+end
 
 end # module JutulModelConfigurations

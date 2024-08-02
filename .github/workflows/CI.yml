@@ -55,7 +55,7 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
         with:
-          prefix: xvfb-run
+          prefix: xvfb-run -a
       - name: Process coverage
         if: success() || failure()
         run: make coverage-lcov.info
@@ -157,9 +157,9 @@ jobs:
           lcov $(find coverage -name 'coverage-lcov.info' -printf '-a %p ') -o coverage-lcov.info
           test -f coverage-lcov.info && make coverage-lcov -o '*/*.cov'
       - name: Display structure of whatever just happened
-        run: ls -R docs
+        run: ls -R
       - name: Build docs
-        run: make DOC_PREFIX='xvfb-run' doc -o '*/*.cov'
+        run: make DOC_PREFIX='xvfb-run -a' doc -o '*/*.cov'
       - name: Display structure of docs
         run: ls -R docs
       - name: Setup Pages

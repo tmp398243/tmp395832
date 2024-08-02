@@ -77,6 +77,7 @@ for cell in 1:number_of_cells(mesh)
 end
 parameters[:Reservoir][:FluidVolume][boundary] *= 1000;
 ## Plot the model
+using GLMakie
 plot_reservoir(model)
 # ## Set up schedule
 # We set up 25 years of injection and 25 years of migration where the well is
@@ -95,7 +96,6 @@ wd, states, t = simulate_reservoir(
 # ## Plot the density of brine
 ## The density of brine depends on the CO2 concentration and gives a good
 ## visualization of where the mass of CO2 exists.
-using GLMakie
 function plot_co2!(fig, ix, x, title="")
     ax = Axis3(
         fig[ix, 1];

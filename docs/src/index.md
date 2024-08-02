@@ -1,15 +1,15 @@
 ```@meta
-CurrentModule = JutulModelConfigurations
+CurrentModule = ConfigurationsJutulDarcy
 ```
 
-# JutulModelConfigurations
+# ConfigurationsJutulDarcy
 
-Documentation for [JutulModelConfigurations](https://github.com/gbruer15/JutulModelConfigurations.jl).
+Documentation for [ConfigurationsJutulDarcy](https://github.com/gbruer15/ConfigurationsJutulDarcy.jl).
 
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [JutulModelConfigurations]
+Modules = [ConfigurationsJutulDarcy]
 ```

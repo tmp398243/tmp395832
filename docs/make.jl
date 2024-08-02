@@ -1,5 +1,5 @@
 using Pkg: Pkg
-using JutulModelConfigurations
+using ConfigurationsJutulDarcy
 using Documenter
 
 using Literate
@@ -88,25 +88,25 @@ for (ex, pth) in examples
 end
 
 DocMeta.setdocmeta!(
-    JutulModelConfigurations,
+    ConfigurationsJutulDarcy,
     :DocTestSetup,
-    :(using JutulModelConfigurations, Test);
+    :(using ConfigurationsJutulDarcy, Test);
     recursive=true,
 )
 makedocs(;
-    modules=[JutulModelConfigurations],
+    modules=[ConfigurationsJutulDarcy],
     authors="Grant Bruer gbruer15@gmail.com and contributors",
-    sitename="JutulModelConfigurations.jl",
+    sitename="ConfigurationsJutulDarcy.jl",
     source=DOC_STAGE,
     build=DOC_BUILD,
     format=Documenter.HTML(;
-        repolink="https://github.com/gbruer15/JutulModelConfigurations.jl",
-        canonical="https://gbruer15.github.io/JutulModelConfigurations.jl",
+        repolink="https://github.com/gbruer15/ConfigurationsJutulDarcy.jl",
+        canonical="https://gbruer15.github.io/ConfigurationsJutulDarcy.jl",
         edit_link="main",
         assets=String[],
         size_threshold=2 * 2^20,
     ),
-    repo="github.com/gbruer15/JutulModelConfigurations.jl",
+    repo="github.com/gbruer15/ConfigurationsJutulDarcy.jl",
     pages=[
         "Home" => "index.md",
         "Examples" => examples_markdown,

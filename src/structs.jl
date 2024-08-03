@@ -1,7 +1,7 @@
 using Configurations
 
-export JutulOptions, MeshOptions, FieldOptions
-export FluidOptions
+export JutulOptions, MeshOptions, SystemOptions
+export FieldOptions, FluidOptions
 export WellOptions, WellRateOptions, WellPressureOptions
 export TimeDependentOptions
 
@@ -10,6 +10,8 @@ export TimeDependentOptions
 
     "number of time steps stored in one file"
     nt = 25
+
+    system = SystemOptions(; label=:co2brine)
 
     "time interval between 2 adjacent time steps (in days)"
     dt = 73.0485
@@ -78,6 +80,10 @@ end
 
     "Grid cell size"
     d = (12.5, 100.0, 6.25)
+end
+
+@option struct SystemOptions
+    label::Symbol
 end
 
 @option struct FluidOptions

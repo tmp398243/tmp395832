@@ -52,6 +52,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+      - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
         with:
@@ -96,6 +97,7 @@ jobs:
         version: '1'
     - name: Checkout branch
       run: git checkout -B "${{ env.formatter_branch }}"
+    - uses: julia-actions/cache@v2
     - name: Install JuliaFormatter and format
       run: make autoformat
     - name: Create pull request with changes
@@ -139,6 +141,7 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: '1'
+      - uses: julia-actions/cache@v2
       - name: Setup LCOV
         run: (command -V genhtml || sudo apt-get -y install lcov) && genhtml --version
         continue-on-error: true

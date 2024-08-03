@@ -88,4 +88,14 @@ function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependen
     return dt, forces
 end
 
+function JutulDarcy.setup_reservoir_model(domain, options::SystemOptions; kwarg...) 
+    model, parameters = setup_reservoir_model(domain, options.label; kwarg...);
+end
+
+function JutulDarcy.setup_reservoir_model(mesh, options::JutulOptions)
+    domain = reservoir_domain(mesh, options)
+    Injector = setup_well(domain, options.injection)
+    model, parameters = setup_reservoir_model(domain, options.system; wells=Injector);
+end
+
 end # module

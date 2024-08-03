@@ -5,6 +5,7 @@ using JutulDarcy.Jutul
 Darcy, bar, kg, meter, day = si_units(:darcy, :bar, :kilogram, :meter, :day)
 options = JutulOptions(;
     mesh=MeshOptions(; n=(10, 1, 5), d=(1e2, 1e0, 1e1)),
+    system=SystemOptions(:co2brine),
     porosity=FieldOptions(; value=0.3),
     permeability=FieldOptions(; value=1.0Darcy),
     temperature=FieldOptions(; value=convert_to_si(30.0, :Celsius)),
@@ -62,9 +63,7 @@ end
 # appropriate functions for density, viscosity and miscibility.
 #
 # Note that this model can be run with a thermal mode by setting
-domain = reservoir_domain(mesh, options)
-Injector = setup_well(domain, options.injection)
-model, parameters = setup_reservoir_model(domain, :co2brine; wells=Injector);
+model, parameters = setup_reservoir_model(mesh, options);
 # ## Find the boundary and set increased volume
 # We find the left and right boundary of the model and increase the volume of
 # those cells. This mimicks a constant pressure boundary condition.

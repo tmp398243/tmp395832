@@ -5,7 +5,7 @@ using JutulDarcy
 using JutulDarcy.Jutul
 
 function Jutul.CartesianMesh(options::MeshOptions)
-    CartesianMesh(options.n, options.n .* options.d)
+    return CartesianMesh(options.n, options.n .* options.d)
 end
 
 function create_field(mesh, options::FieldOptions)
@@ -23,7 +23,7 @@ function create_field(mesh, options::FieldOptions)
             return options.value
         end
     end
-    error("Unknown field type: '$(options.type)'")
+    return error("Unknown field type: '$(options.type)'")
 end
 
 function JutulDarcy.reservoir_domain(mesh, options::JutulOptions)
@@ -35,7 +35,11 @@ function JutulDarcy.reservoir_domain(mesh, options::JutulOptions)
     rock_thermal_conductivity = create_field(mesh, options.rock_thermal_conductivity)
     fluid_thermal_conductivity = create_field(mesh, options.fluid_thermal_conductivity)
     component_heat_capacity = create_field(mesh, options.component_heat_capacity)
-    domain = reservoir_domain(mesh; permeability, porosity, temperature,
+    return domain = reservoir_domain(
+        mesh;
+        permeability,
+        porosity,
+        temperature,
         rock_density,
         rock_heat_capacity,
         rock_thermal_conductivity,
@@ -48,8 +52,12 @@ function JutulDarcy.setup_well(D::DataDomain, options::WellOptions; kwarg...)
     start_loc = [options.loc..., options.search_zrange[1]]
     stop_loc = [options.loc..., options.search_zrange[2]]
 
-    start_dist, start_idx = findmin(x -> sum((x .- start_loc).^2), eachcol(D[:cell_centroids])) 
-    stop_dist, stop_idx = findmin(x -> sum((x .- stop_loc).^2), eachcol(D[:cell_centroids])) 
+    start_dist, start_idx = findmin(
+        x -> sum((x .- start_loc) .^ 2), eachcol(D[:cell_centroids])
+    )
+    stop_dist, stop_idx = findmin(
+        x -> sum((x .- stop_loc) .^ 2), eachcol(D[:cell_centroids])
+    )
     if start_idx != stop_idx
         error("I didn't figure out how to implement this yet.")
     end
@@ -61,18 +69,18 @@ function JutulDarcy.InjectorControl(options::WellRateOptions)
     rate_kg_s = options.rate_mtons_year * 1e9 / (365.2425 * 24 * 60 * 60)
     rate_m3_s = rate_kg_s / options.fluid_density
     rate_target = TotalRateTarget(rate_m3_s)
-    I_ctrl = InjectorControl(rate_target, [0.0, 1.0], density = options.fluid_density)
+    return I_ctrl = InjectorControl(rate_target, [0.0, 1.0]; density=options.fluid_density)
 end
 
 function setup_control(options)
     if options.type == "injector"
         return InjectorControl(options)
     end
-    error("Not implemented for type: $type")
+    return error("Not implemented for type: $type")
 end
 
 function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependentOptions})
-    nsteps = sum(x->x.steps, options)
+    nsteps = sum(x -> x.steps, options)
     dt = fill(0.0, nsteps)
     forces = Vector{Any}(undef, nsteps)
 
@@ -88,14 +96,14 @@ function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependen
     return dt, forces
 end
 
-function JutulDarcy.setup_reservoir_model(domain, options::SystemOptions; kwarg...) 
-    model, parameters = setup_reservoir_model(domain, options.label; kwarg...);
+function JutulDarcy.setup_reservoir_model(domain, options::SystemOptions; kwarg...)
+    return model, parameters = setup_reservoir_model(domain, options.label; kwarg...)
 end
 
 function JutulDarcy.setup_reservoir_model(mesh, options::JutulOptions)
     domain = reservoir_domain(mesh, options)
     Injector = setup_well(domain, options.injection)
-    model, parameters = setup_reservoir_model(domain, options.system; wells=Injector);
+    return model, parameters = setup_reservoir_model(domain, options.system; wells=Injector)
 end
 
 end # module

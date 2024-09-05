@@ -89,7 +89,12 @@ for (ex, pth) in examples
 end
 
 # Set metadata for doctests.
-DocMeta.setdocmeta!(ConfigurationsJutulDarcy, :DocTestSetup, :(using ConfigurationsJutulDarcy, Test); recursive=true)
+DocMeta.setdocmeta!(
+    ConfigurationsJutulDarcy,
+    :DocTestSetup,
+    :(using ConfigurationsJutulDarcy, Test);
+    recursive=true,
+)
 if ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
     using Random
     DocMeta.setdocmeta!(
@@ -100,7 +105,10 @@ if ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
     )
 end
 makedocs(;
-    modules=[ConfigurationsJutulDarcy, ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt)],
+    modules=[
+        ConfigurationsJutulDarcy,
+        ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt),
+    ],
     authors="Grant Bruer gbruer15@gmail.com and contributors",
     sitename="ConfigurationsJutulDarcy.jl",
     source=DOC_STAGE,

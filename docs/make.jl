@@ -1,6 +1,7 @@
 using Pkg: Pkg
 using ConfigurationsJutulDarcy
 using Documenter
+using Random # Loads ConfigurationsJutulDarcy Random extension.
 
 using Literate
 
@@ -87,26 +88,31 @@ for (ex, pth) in examples
     end
 end
 
-DocMeta.setdocmeta!(
-    ConfigurationsJutulDarcy,
-    :DocTestSetup,
-    :(using ConfigurationsJutulDarcy, Test);
-    recursive=true,
-)
+# Set metadata for doctests.
+DocMeta.setdocmeta!(ConfigurationsJutulDarcy, :DocTestSetup, :(using ConfigurationsJutulDarcy, Test); recursive=true)
+if ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
+    using Random
+    DocMeta.setdocmeta!(
+        ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt),
+        :DocTestSetup,
+        :(using ConfigurationsJutulDarcy, Test);
+        recursive=true,
+    )
+end
 makedocs(;
-    modules=[ConfigurationsJutulDarcy],
+    modules=[ConfigurationsJutulDarcy, ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt)],
     authors="Grant Bruer gbruer15@gmail.com and contributors",
     sitename="ConfigurationsJutulDarcy.jl",
     source=DOC_STAGE,
     build=DOC_BUILD,
     format=Documenter.HTML(;
-        repolink="https://github.com/gbruer15/ConfigurationsJutulDarcy.jl",
-        canonical="https://gbruer15.github.io/ConfigurationsJutulDarcy.jl",
+        repolink="https://github.com/tmp398243/tmp395832.jl",
+        canonical="https://tmp398243.github.io/tmp395832.jl",
         edit_link="main",
         assets=String[],
         size_threshold=2 * 2^20,
     ),
-    repo="github.com/gbruer15/ConfigurationsJutulDarcy.jl",
+    repo="github.com/tmp398243/tmp395832.jl",
     pages=[
         "Home" => "index.md",
         "Examples" => examples_markdown,

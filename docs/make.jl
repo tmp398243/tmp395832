@@ -114,13 +114,13 @@ makedocs(;
     source=DOC_STAGE,
     build=DOC_BUILD,
     format=Documenter.HTML(;
-        repolink="https://github.com/tmp398243/tmp395832.jl",
-        canonical="https://tmp398243.github.io/tmp395832.jl",
+        repolink="https://github.com/tmp398243/tmp395832",
+        canonical="https://tmp398243.github.io/tmp395832",
         edit_link="main",
         assets=String[],
         size_threshold=2 * 2^20,
     ),
-    repo="github.com/tmp398243/tmp395832.jl",
+    repo="github.com/tmp398243/tmp395832",
     pages=[
         "Home" => "index.md",
         "Examples" => examples_markdown,

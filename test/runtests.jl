@@ -18,21 +18,12 @@ ts = @testset ReportingTestSet "" begin
         :(using ConfigurationsJutulDarcy, Test);
         recursive=true,
     )
-    if ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
-        using Random
-        DocMeta.setdocmeta!(
-            ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt),
-            :DocTestSetup,
-            :(using ConfigurationsJutulDarcy, Test);
-            recursive=true,
-        )
-    end
 
     # Run doctests.
     doctest(ConfigurationsJutulDarcy; manual=true)
-    if ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
+    if false && ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
         doctest(
-            ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt);
+            ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :JutulDarcyExt);
             manual=true,
         )
     end

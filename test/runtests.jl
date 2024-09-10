@@ -23,7 +23,9 @@ ts = @testset ReportingTestSet "" begin
     doctest(ConfigurationsJutulDarcy; manual=true)
     if false && ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
         doctest(
-            ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :JutulDarcyExt);
+            ConfigurationsJutulDarcy.get_extension(
+                ConfigurationsJutulDarcy, :JutulDarcyExt
+            );
             manual=true,
         )
     end

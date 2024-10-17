@@ -51,17 +51,16 @@ export TimeDependentOptions
 
     injection = WellOptions(;
         trajectory=[
-            1875.0 50.0 1693.75;
-            1875.0 50.0 1693.75 + 37.5;
-        ],
-        name=:Injector,
+            1875.0 50.0 1693.75
+            1875.0 50.0 1693.75+37.5
+        ], name=:Injector
     )
 
     production = WellOptions(;
         active=false,
         trajectory=[
-            2875.0 50.0 1693.75;
-            2875.0 50.0 1693.75 + 37.5;
+            2875.0 50.0 1693.75
+            2875.0 50.0 1693.75+37.5
         ],
         name=:Producer,
     )

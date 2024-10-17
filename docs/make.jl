@@ -96,9 +96,9 @@ DocMeta.setdocmeta!(
     recursive=true,
 )
 if ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
-    using Random
+    using JutulDarcy
     DocMeta.setdocmeta!(
-        ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt),
+        ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :JutulDarcyExt),
         :DocTestSetup,
         :(using ConfigurationsJutulDarcy, Test);
         recursive=true,
@@ -107,7 +107,7 @@ end
 makedocs(;
     modules=[
         ConfigurationsJutulDarcy,
-        ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt),
+        ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :JutulDarcyExt),
     ],
     authors="Grant Bruer gbruer15@gmail.com and contributors",
     sitename="ConfigurationsJutulDarcy.jl",

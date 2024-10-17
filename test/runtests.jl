@@ -21,7 +21,8 @@ ts = @testset ReportingTestSet "" begin
 
     # Run doctests.
     doctest(ConfigurationsJutulDarcy; manual=true)
-    if false && ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
+    if ConfigurationsJutulDarcy.HAS_NATIVE_EXTENSIONS
+        using JutulDarcy
         doctest(
             ConfigurationsJutulDarcy.get_extension(
                 ConfigurationsJutulDarcy, :JutulDarcyExt
@@ -29,7 +30,8 @@ ts = @testset ReportingTestSet "" begin
             manual=true,
         )
     end
-
+end
+if false
     # Run examples.
     examples_dir = joinpath(@__DIR__, "..", "examples")
     for example in readdir(examples_dir)

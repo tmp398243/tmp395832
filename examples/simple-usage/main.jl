@@ -93,8 +93,8 @@ wd, states, t = simulate_reservoir(
     state0, model, dt; parameters=parameters, forces=forces, max_timestep=30day
 )
 # ## Plot the density of brine
-## The density of brine depends on the CO2 concentration and gives a good
-## visualization of where the mass of CO2 exists.
+# The density of brine depends on the CO2 concentration and gives a good
+# visualization of where the mass of CO2 exists.
 function plot_co2!(fig, ix, x, title="")
     ax = Axis3(
         fig[ix, 1];
@@ -119,5 +119,5 @@ for (i, step) in enumerate([1, 5, nstep, nstep + nstep_shut])
     )
 end
 fig
-## Plot result in interactive viewer
+# ## Plot result in interactive viewer
 plot_reservoir(model, states)

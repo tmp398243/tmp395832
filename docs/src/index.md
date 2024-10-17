@@ -19,9 +19,9 @@ Modules = [ConfigurationsJutulDarcy]
 # Extensions
 
 ```@index
-Modules = [ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt)]
+Modules = [ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :JutulDarcyExt)]
 ```
 
 ```@autodocs
-Modules = [ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :RandomExt)]
+Modules = [ConfigurationsJutulDarcy.get_extension(ConfigurationsJutulDarcy, :JutulDarcyExt)]
 ```

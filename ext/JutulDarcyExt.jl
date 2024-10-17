@@ -45,7 +45,7 @@ function JutulDarcy.reservoir_domain(mesh, options::JutulOptions; kwargs...)
         rock_thermal_conductivity,
         fluid_thermal_conductivity,
         component_heat_capacity,
-        kwargs...
+        kwargs...,
     )
 end
 
@@ -55,10 +55,9 @@ function JutulDarcy.setup_well(D::DataDomain, options::WellOptions; kwargs...)
     mesh = physical_representation(D)
     reservoir_cells = find_enclosing_cells(mesh, options.trajectory)
     # Injector = setup_well(domain, wc, name = :Injector, simple_well = true)
-    return setup_well(D, reservoir_cells;
-        name=options.name,
-        simple_well=options.simple_well,
-        kwargs...)
+    return setup_well(
+        D, reservoir_cells; name=options.name, simple_well=options.simple_well, kwargs...
+    )
 end
 
 function JutulDarcy.InjectorControl(options::WellRateOptions)
@@ -75,7 +74,9 @@ function setup_control(options)
     return error("Not implemented for type: $type")
 end
 
-function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependentOptions}; bc)
+function JutulDarcy.setup_reservoir_forces(
+    model, options::Vector{<:TimeDependentOptions}; bc
+)
     nsteps = sum(x -> x.steps, options)
     dt = fill(0.0, nsteps)
     forces = Vector{Any}(undef, nsteps)
@@ -93,11 +94,13 @@ function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependen
 end
 
 function JutulDarcy.setup_reservoir_model(domain, options::CO2BrineOptions; kwargs...)
-    return setup_reservoir_model(domain, get_label(options); 
-        thermal = options.thermal,
-        co2_physics = options.co2_physics,
+    return setup_reservoir_model(
+        domain,
+        get_label(options);
+        thermal=options.thermal,
+        co2_physics=options.co2_physics,
         options.extra_kwargs...,
-        kwargs...
+        kwargs...,
     )
 end
 
@@ -108,7 +111,6 @@ function JutulDarcy.setup_reservoir_state(model, options::CO2BrineOptions; kwarg
         state0 = setup_reservoir_state(model; OverallMoleFractions=[1.0, 0.0], kwargs...)
     end
 end
-
 
 function JutulDarcy.setup_reservoir_model(mesh, options::JutulOptions)
     domain = reservoir_domain(mesh, options)

@@ -8,14 +8,14 @@ using JutulDarcy.Jutul
 
 Darcy, bar, kg, meter, day, yr = si_units(:darcy, :bar, :kilogram, :meter, :day, :year)
 injection_well_trajectory = [
-    645.0 0.5 75;    # First point
-    660.0 0.5 85;    # Second point
+    645.0 0.5 75    # First point
+    660.0 0.5 85    # Second point
     710.0 0.5 100.0  # Third point
 ]
 
 options = JutulOptions(;
     mesh=MeshOptions(; n=(100, 1, 50), d=(1e1, 1e0, 1e0)),
-    system=CO2BrineOptions(co2_physics=:immiscible, thermal=false),
+    system=CO2BrineOptions(; co2_physics=:immiscible, thermal=false),
     porosity=FieldOptions(; value=-1.0),
     permeability=FieldOptions(; value=-1.0),
     temperature=FieldOptions(; value=convert_to_si(30.0, :Celsius)),
@@ -24,9 +24,7 @@ options = JutulOptions(;
     rock_thermal_conductivity=FieldOptions(; value=3.0),
     fluid_thermal_conductivity=FieldOptions(; value=0.6),
     component_heat_capacity=FieldOptions(; value=4184.0),
-    injection=WellOptions(;
-        trajectory=injection_well_trajectory, name=:Injector
-    ),
+    injection=WellOptions(; trajectory=injection_well_trajectory, name=:Injector),
     time=[
         TimeDependentOptions(;
             years=25.0,
@@ -57,13 +55,7 @@ for (i, pt) in enumerate(points)
     x, y, z = pt
     x_u = 2 * π * x / 1000.0
     w = 0.2
-    dz =
-        0.05 * x +
-        0.05 * abs(x - 500.0) +
-        w * (
-            30 * sin(2.0 * x_u) +
-            20 * sin(5.0 * x_u)
-        )
+    dz = 0.05 * x + 0.05 * abs(x - 500.0) + w * (30 * sin(2.0 * x_u) + 20 * sin(5.0 * x_u))
     points[i] = pt + [0, 0, dz]
 end
 
@@ -78,20 +70,20 @@ poro = fill(0.3, nc)
 region = zeros(Int, nc)
 for cell in 1:nc
     I, J, K = cell_ijk(mesh, cell)
-    if K < 0.3*options.mesh.n[3]
+    if K < 0.3 * options.mesh.n[3]
         reg = 1
-        permxy = 0.3*Darcy
+        permxy = 0.3 * Darcy
         phi = 0.2
-    elseif K < 0.7*options.mesh.n[3]
+    elseif K < 0.7 * options.mesh.n[3]
         reg = 2
-        permxy = 1.2*Darcy
+        permxy = 1.2 * Darcy
         phi = 0.35
     else
         reg = 3
-        permxy = 0.1*Darcy
+        permxy = 0.1 * Darcy
         phi = 0.1
     end
-    permz = 0.5*permxy
+    permz = 0.5 * permxy
     perm[1, cell] = perm[2, cell] = permxy
     perm[3, cell] = permz
     poro[cell] = phi
@@ -108,8 +100,7 @@ plot_cell_data(mesh, poro)
 # Note that this model by default is isothermal, but we still need to specify a
 # temperature when setting up the model. This is because the properties of CO2
 # strongly depend on temperature, even when thermal transport is not solved.
-domain = reservoir_domain(mesh, options; permeability = perm, porosity = poro)
-
+domain = reservoir_domain(mesh, options; permeability=perm, porosity=poro)
 
 # ## Plot cells intersected by the deviated injector well
 # We place a single injector well. This well was unfortunately not drilled
@@ -122,12 +113,12 @@ import JutulDarcy.Jutul: plot_mesh_edges
 Injector = setup_well(domain, options.injection)
 
 wc = Injector.perforations.reservoir
-fig, ax, plt = plot_mesh_edges(mesh, z_is_depth = true)
-plot_mesh!(ax, mesh; cells = wc, transparency = true, alpha = 0.4)
+fig, ax, plt = plot_mesh_edges(mesh; z_is_depth=true)
+plot_mesh!(ax, mesh; cells=wc, transparency=true, alpha=0.4)
 # View from the side
-ax.azimuth[] = 1.5*π
+ax.azimuth[] = 1.5 * π
 ax.elevation[] = 0.0
-lines!(ax, options.injection.trajectory', color = :red)
+lines!(ax, options.injection.trajectory'; color=:red)
 display(fig)
 fig
 # Make model
@@ -143,22 +134,22 @@ model = setup_reservoir_model(domain, options.system; wells=Injector, extra_out=
 # default since hysteresis falls under advanced functionality.
 import JutulDarcy: table_to_relperm, add_relperm_parameters!, brooks_corey_relperm
 so = range(0, 1, 10)
-krog_t = so.^2
-krog = PhaseRelativePermeability(so, krog_t, label = :og)
+krog_t = so .^ 2
+krog = PhaseRelativePermeability(so, krog_t; label=:og)
 
 # Higher resolution for second table
 sg = range(0, 1, 50)
 
 # Evaluate Brooks-Corey to generate tables
-tab_krg_drain = brooks_corey_relperm.(sg, n = 2, residual = 0.1)
-tab_krg_imb = brooks_corey_relperm.(sg, n = 3, residual = 0.25)
+tab_krg_drain = brooks_corey_relperm.(sg, n=2, residual=0.1)
+tab_krg_imb = brooks_corey_relperm.(sg, n=3, residual=0.25)
 
-krg_drain  = PhaseRelativePermeability(sg, tab_krg_drain, label = :g)
-krg_imb  = PhaseRelativePermeability(sg, tab_krg_imb, label = :g)
+krg_drain = PhaseRelativePermeability(sg, tab_krg_drain; label=:g)
+krg_imb = PhaseRelativePermeability(sg, tab_krg_imb; label=:g)
 
-fig, ax, plt = lines(sg, tab_krg_drain, label = "krg drainage")
-lines!(ax, sg, tab_krg_imb, label = "krg imbibition")
-lines!(ax, 1 .- so, krog_t, label = "kro")
+fig, ax, plt = lines(sg, tab_krg_drain; label="krg drainage")
+lines!(ax, sg, tab_krg_imb; label="krg imbibition")
+lines!(ax, 1 .- so, krog_t; label="kro")
 axislegend()
 display(fig)
 fig
@@ -178,10 +169,10 @@ fig
 # hysteresis is enabled, we track maximum saturation for hysteresis in each
 # reservoir cell.
 import JutulDarcy: KilloughHysteresis, ReservoirRelativePermeabilities
-krg = (krg_drain, krg_imb) 
+krg = (krg_drain, krg_imb)
 H_g = KilloughHysteresis() # Other options: CarlsonHysteresis, JargonHysteresis
-relperm = ReservoirRelativePermeabilities(g = krg, og = krog, hysteresis_g = H_g)
-replace_variables!(model, RelativePermeabilities = relperm)
+relperm = ReservoirRelativePermeabilities(; g=krg, og=krog, hysteresis_g=H_g)
+replace_variables!(model; RelativePermeabilities=relperm)
 add_relperm_parameters!(model);
 # ## Define approximate hydrostatic pressure and set up initial state
 # The initial pressure of the water-filled domain is assumed to be at
@@ -195,7 +186,7 @@ nc = number_of_cells(mesh)
 p0 = zeros(nc)
 depth = domain[:cell_centroids][3, :]
 g = Jutul.gravity_constant
-@. p0 = 200bar + depth*g*1000.0
+@. p0 = 200bar + depth * g * 1000.0
 state0 = setup_reservoir_state(model, options.system; Pressure=p0)
 parameters = setup_parameters(model);
 
@@ -211,7 +202,7 @@ for cell in 1:number_of_cells(mesh)
         push!(boundary, cell)
     end
 end
-bc = flow_boundary_condition(boundary, domain, p0[boundary], fractional_flow = [1.0, 0.0])
+bc = flow_boundary_condition(boundary, domain, p0[boundary]; fractional_flow=[1.0, 0.0])
 println("Boundary condition added to $(length(bc)) cells.")
 ## Plot the model
 fig = plot_reservoir(model)
@@ -249,15 +240,27 @@ function plot_co2!(fig, ix, x, title="")
         aspect=(1.0, 1.0, 0.3),
         title=title,
     )
-    plt = plot_cell_data!(ax, mesh, x, colormap = :seaborn_icefire_gradient, colorrange = (0.0, 0.1))
+    plt = plot_cell_data!(
+        ax, mesh, x; colormap=:seaborn_icefire_gradient, colorrange=(0.0, 0.1)
+    )
     return Colorbar(fig[ix, 2], plt)
 end
 fig = Figure(; size=(900, 1200))
 for (i, step) in enumerate([1, 5, nstep, nstep + nstep_shut])
     if options.system.co2_physics == :immiscible
-        plot_co2!(fig, i, states[step][:Saturations][2, :], "CO2 plume saturation at report step $step/$(nstep+nstep_shut)")
+        plot_co2!(
+            fig,
+            i,
+            states[step][:Saturations][2, :],
+            "CO2 plume saturation at report step $step/$(nstep+nstep_shut)",
+        )
     else
-        plot_co2!(fig, i, states[step][:OverallMoleFractions][2, :], "CO2 mole fraction at report step $step/$(nstep+nstep_shut)")
+        plot_co2!(
+            fig,
+            i,
+            states[step][:OverallMoleFractions][2, :],
+            "CO2 mole fraction at report step $step/$(nstep+nstep_shut)",
+        )
     end
 end
 display(fig)
@@ -280,9 +283,9 @@ for state in states
 end
 
 fig = Figure()
-ax = Axis(fig[1, 1], title = "Relative permeability during simulation")
-fig, ax, plt = scatter(sg_val, kro_val, label = "kro", alpha = 0.3)
-scatter!(ax, sg_val, krg_val, label = "krg", alpha = 0.3)
+ax = Axis(fig[1, 1]; title="Relative permeability during simulation")
+fig, ax, plt = scatter(sg_val, kro_val; label="kro", alpha=0.3)
+scatter!(ax, sg_val, krg_val; label="krg", alpha=0.3)
 axislegend()
 display(fig)
 fig
@@ -311,7 +314,7 @@ fig
 # additional categories to distinguish between outside and inside the region of
 # interest.
 cells = findall(region .== 2)
-inventory = co2_inventory(model, wd, states, t, cells = cells)
+inventory = co2_inventory(model, wd, states, t; cells=cells)
 fig = JutulDarcy.plot_co2_inventory(t, inventory)
 display(fig)
 fig
@@ -323,12 +326,12 @@ is_inside = fill(false, nc)
 centers = domain[:cell_centroids]
 for cell in 1:nc
     x, y, z = centers[:, cell]
-    is_inside[cell] = sqrt((x - 720.0)^2 + 20*(z-70.0)^2) < 75
+    is_inside[cell] = sqrt((x - 720.0)^2 + 20 * (z - 70.0)^2) < 75
 end
 plot_cell_data(mesh, is_inside)
 # ## Plot inventory in ellipsoid
 # Note that a small mobile dip can be seen when free CO2 passes through this region.
-inventory = co2_inventory(model, wd, states, t, cells = findall(is_inside))
+inventory = co2_inventory(model, wd, states, t; cells=findall(is_inside))
 fig = JutulDarcy.plot_co2_inventory(t, inventory)
 display(fig)
 fig
@@ -337,15 +340,11 @@ fig
 # apply a function over all time-steps to figure out what the average pressure
 # value was.
 using Statistics
-p_avg = map(
-    state -> mean(state[:Pressure][is_inside])./bar,
-    states
-)
-fig = lines(t./yr, p_avg,
-    axis = (
-        title = "Average pressure in region",
-        xlabel = "Years", ylabel = "Pressure (bar)"
-    )
+p_avg = map(state -> mean(state[:Pressure][is_inside]) ./ bar, states)
+fig = lines(
+    t ./ yr,
+    p_avg;
+    axis=(title="Average pressure in region", xlabel="Years", ylabel="Pressure (bar)"),
 )
 display(fig)
 fig
@@ -354,23 +353,16 @@ fig
 # show the ellipsoid, the mass of CO2 in that region for a specific step, and
 # the time series of the CO2 in the same region.
 
-stepno = clamp(100, nstep, length(states)) 
-co2_mass_in_region = map(
-    state -> sum(state[:TotalMasses][2, is_inside])/1e3,
-    states
-)
-fig = Figure(size = (1200, 600))
-ax1 = Axis(fig[1, 1],
-    title = "Mass of CO2 in region",
-    xlabel = "Years",
-    ylabel = "Tonnes CO2"
-)
-lines!(ax1, t./yr, co2_mass_in_region)
-scatter!(ax1, t[stepno]./yr, co2_mass_in_region[stepno], markersize = 12, color = :red)
-ax2 = Axis3(fig[1, 2], zreversed = true)
+stepno = clamp(100, nstep, length(states))
+co2_mass_in_region = map(state -> sum(state[:TotalMasses][2, is_inside]) / 1e3, states)
+fig = Figure(; size=(1200, 600))
+ax1 = Axis(fig[1, 1]; title="Mass of CO2 in region", xlabel="Years", ylabel="Tonnes CO2")
+lines!(ax1, t ./ yr, co2_mass_in_region)
+scatter!(ax1, t[stepno] ./ yr, co2_mass_in_region[stepno]; markersize=12, color=:red)
+ax2 = Axis3(fig[1, 2]; zreversed=true)
 plot_cell_data!(ax2, mesh, states[stepno][:TotalMasses][2, :])
-plot_mesh!(ax2, mesh, cells = findall(is_inside), alpha = 0.5)
-ax2.azimuth[] = 1.5*π
+plot_mesh!(ax2, mesh; cells=findall(is_inside), alpha=0.5)
+ax2.azimuth[] = 1.5 * π
 ax2.elevation[] = 0.0
 display(fig)
 fig

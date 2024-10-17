@@ -30,8 +30,7 @@ ts = @testset ReportingTestSet "" begin
             manual=true,
         )
     end
-end
-if false
+
     # Run examples.
     examples_dir = joinpath(@__DIR__, "..", "examples")
     for example in readdir(examples_dir)

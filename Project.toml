@@ -1,7 +1,7 @@
 name = "ConfigurationsJutulDarcy"
 uuid = "8c1f6541-c3b1-479a-a223-9e83eb45f3f9"
 authors = ["Grant Bruer gbruer15@gmail.com and contributors"]
-version = "0.0.1"
+version = "0.0.2"
 
 [deps]
 Configurations = "5218b696-f38b-4ac9-8b61-a12ec717816d"
@@ -15,9 +15,9 @@ JutulDarcyExt = "JutulDarcy"
 
 [compat]
 Configurations = "0.17"
-JutulDarcy = "0.2.26"
+JutulDarcy = "0.2.35"
 PackageExtensionCompat = "1"
-julia = "1.8"
+julia = "1.10"
 
 [extras]
 JutulDarcy = "82210473-ab04-4dce-b31b-11573c4f8e0a"

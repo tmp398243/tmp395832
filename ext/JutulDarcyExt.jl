@@ -26,7 +26,7 @@ function create_field(mesh, options::FieldOptions)
     return error("Unknown field type: '$(options.type)'")
 end
 
-function JutulDarcy.reservoir_domain(mesh, options::JutulOptions)
+function JutulDarcy.reservoir_domain(mesh, options::JutulOptions; kwargs...)
     porosity = create_field(mesh, options.porosity)
     temperature = create_field(mesh, options.temperature)
     permeability = create_field(mesh, options.permeability)
@@ -45,24 +45,20 @@ function JutulDarcy.reservoir_domain(mesh, options::JutulOptions)
         rock_thermal_conductivity,
         fluid_thermal_conductivity,
         component_heat_capacity,
+        kwargs...
     )
 end
 
-function JutulDarcy.setup_well(D::DataDomain, options::WellOptions; kwarg...)
-    start_loc = [options.loc..., options.search_zrange[1]]
-    stop_loc = [options.loc..., options.search_zrange[2]]
+import JutulDarcy.Jutul: find_enclosing_cells
 
-    start_dist, start_idx = findmin(
-        x -> sum((x .- start_loc) .^ 2), eachcol(D[:cell_centroids])
-    )
-    stop_dist, stop_idx = findmin(
-        x -> sum((x .- stop_loc) .^ 2), eachcol(D[:cell_centroids])
-    )
-    if start_idx != stop_idx
-        error("I didn't figure out how to implement this yet.")
-    end
-    reservoir_cells = [start_idx]
-    return setup_well(D, reservoir_cells; name=Symbol(options.name), kwarg...)
+function JutulDarcy.setup_well(D::DataDomain, options::WellOptions; kwargs...)
+    mesh = physical_representation(D)
+    reservoir_cells = find_enclosing_cells(mesh, options.trajectory)
+    # Injector = setup_well(domain, wc, name = :Injector, simple_well = true)
+    return setup_well(D, reservoir_cells;
+        name=options.name,
+        simple_well=options.simple_well,
+        kwargs...)
 end
 
 function JutulDarcy.InjectorControl(options::WellRateOptions)
@@ -79,7 +75,7 @@ function setup_control(options)
     return error("Not implemented for type: $type")
 end
 
-function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependentOptions})
+function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependentOptions}; bc)
     nsteps = sum(x -> x.steps, options)
     dt = fill(0.0, nsteps)
     forces = Vector{Any}(undef, nsteps)
@@ -88,7 +84,7 @@ function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependen
     for opt in options
         stop_step = start_step + opt.steps - 1
         control = Dict(Symbol(o.name) => setup_control(o) for o in opt.controls)
-        forces_opt = setup_reservoir_forces(model; control)
+        forces_opt = setup_reservoir_forces(model; control, bc)
         dt[start_step:stop_step] .= (365.2425 * 24 * 60 * 60) * opt.years / opt.steps
         fill!(view(forces, start_step:stop_step), forces_opt)
         start_step = stop_step + 1
@@ -96,14 +92,28 @@ function JutulDarcy.setup_reservoir_forces(model, options::Vector{<:TimeDependen
     return dt, forces
 end
 
-function JutulDarcy.setup_reservoir_model(domain, options::SystemOptions; kwarg...)
-    return model, parameters = setup_reservoir_model(domain, options.label; kwarg...)
+function JutulDarcy.setup_reservoir_model(domain, options::CO2BrineOptions; kwargs...)
+    return setup_reservoir_model(domain, get_label(options); 
+        thermal = options.thermal,
+        co2_physics = options.co2_physics,
+        options.extra_kwargs...,
+        kwargs...
+    )
 end
+
+function JutulDarcy.setup_reservoir_state(model, options::CO2BrineOptions; kwargs...)
+    if options.co2_physics == :immiscible
+        state0 = setup_reservoir_state(model; Saturations=[1.0, 0.0], kwargs...)
+    else
+        state0 = setup_reservoir_state(model; OverallMoleFractions=[1.0, 0.0], kwargs...)
+    end
+end
+
 
 function JutulDarcy.setup_reservoir_model(mesh, options::JutulOptions)
     domain = reservoir_domain(mesh, options)
     Injector = setup_well(domain, options.injection)
-    return model, parameters = setup_reservoir_model(domain, options.system; wells=Injector)
+    return setup_reservoir_model(domain, options.system; wells=Injector)
 end
 
 end # module

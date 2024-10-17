@@ -77,7 +77,7 @@ for (ex, pth) in examples
             # Build outputs.
             Literate.markdown(in_pth, out_dir; name="index", preprocess=upd, execute=true)
             if build_notebooks
-                Literate.notebook(in_pth, out_dir)
+                Literate.notebook(in_pth, out_dir; execute=false)
             end
             if build_scripts
                 Literate.script(in_pth, out_dir)
@@ -118,7 +118,7 @@ makedocs(;
         canonical="https://tmp398243.github.io/tmp395832",
         edit_link="main",
         assets=String[],
-        size_threshold=2 * 2^20,
+        size_threshold=20 * 2^20,
     ),
     repo="github.com/tmp398243/tmp395832",
     pages=[

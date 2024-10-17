@@ -1,6 +1,7 @@
 using Configurations
 
-export JutulOptions, MeshOptions, SystemOptions
+export JutulOptions, MeshOptions
+export SystemOptions, CO2BrineOptions, get_label
 export FieldOptions, FluidOptions
 export WellOptions, WellRateOptions, WellPressureOptions
 export TimeDependentOptions
@@ -11,7 +12,7 @@ export TimeDependentOptions
     "number of time steps stored in one file"
     nt = 25
 
-    system = SystemOptions(; label=:co2brine)
+    system = CO2BrineOptions()
 
     "time interval between 2 adjacent time steps (in days)"
     dt = 73.0485
@@ -39,24 +40,29 @@ export TimeDependentOptions
     "Pascals"
     reference_pressure = 1.5e7
 
-    porosity = FieldOptions(; value=0.3)
-    permeability = FieldOptions(; value=1e-12)
+    porosity = FieldOptions(; value=0.1)
+    permeability = FieldOptions(; value=9.869233e-14)
     temperature = FieldOptions(; value=3e2)
-    rock_density = FieldOptions(; value=30.0)
+    rock_density = FieldOptions(; value=2000.0)
     rock_heat_capacity = FieldOptions(; value=900.0)
     rock_thermal_conductivity = FieldOptions(; value=3.0)
     fluid_thermal_conductivity = FieldOptions(; value=0.6)
     component_heat_capacity = FieldOptions(; value=4184.0)
 
     injection = WellOptions(;
-        loc=[1875.0, 50.0], search_zrange=[1693.75, 1812.5], length=37.5, name=:Injector
+        trajectory=[
+            1875.0 50.0 1693.75;
+            1875.0 50.0 1693.75 + 37.5;
+        ],
+        name=:Injector,
     )
 
     production = WellOptions(;
         active=false,
-        loc=[2875.0, 50.0],
-        search_zrange=[1693.75, 1756.25],
-        length=37.5,
+        trajectory=[
+            2875.0 50.0 1693.75;
+            2875.0 50.0 1693.75 + 37.5;
+        ],
         name=:Producer,
     )
 
@@ -82,9 +88,14 @@ end
     d = (12.5, 100.0, 6.25)
 end
 
-@option struct SystemOptions
-    label::Symbol
+abstract type SystemOptions end
+
+@option struct CO2BrineOptions <: SystemOptions
+    co2_physics::Symbol = :immiscible
+    thermal::Bool = false
+    extra_kwargs = (;)
 end
+get_label(::CO2BrineOptions) = :co2brine
 
 @option struct FluidOptions
     "Identifier for viewing options"
@@ -103,18 +114,14 @@ end
 @option struct FieldOptions
     type = "constant"
     value::Any
-    pad_boundary = false
+    pad_boundary::Bool = false
     pad_value = 0.0
 end
 
 @option struct WellOptions
-    active = true
-    loc::Any
-    search_zrange::Any
-
-    "meters"
-    length::Any
-
+    active::Bool = true
+    trajectory::Any
+    simple_well::Bool = true
     name::Symbol
 end
 

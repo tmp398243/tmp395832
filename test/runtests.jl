@@ -31,6 +31,9 @@ ts = @testset ReportingTestSet "" begin
         )
     end
 
+    # Run unit tests.
+    include("test_conversion.jl")
+
     # Run examples.
     examples_dir = joinpath(@__DIR__, "..", "examples")
     for example in readdir(examples_dir)

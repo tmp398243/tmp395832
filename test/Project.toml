@@ -1,10 +1,11 @@
 [deps]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+Configurations = "5218b696-f38b-4ac9-8b61-a12ec717816d"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+JutulDarcy = "82210473-ab04-4dce-b31b-11573c4f8e0a"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TestReports = "dcd651b4-b50a-5b6b-8f22-87e9f253a252"
-JutulDarcy = "82210473-ab04-4dce-b31b-11573c4f8e0a"
 
 [compat]
 Aqua = "0.8"

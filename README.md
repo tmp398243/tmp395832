@@ -1,4 +1,4 @@
-# ConfigurationsJutulDarcy
+# ConfigurationsJutulDarcy.jl
 
 |  |     |
 |--|:---:|
@@ -11,7 +11,18 @@
 [docs-build-url]: https://github.com/gbruer15/ConfigurationsJutulDarcy.jl/actions/workflows/docs.yaml?query=branch%3Amain
 [codecov-url]: https://gbruer15.github.io/ConfigurationsJutulDarcy.jl/coverage/
 
-This package exists as a template for quickly getting a Julia package set up with continuous integration and documentation support. If you have suggestions for making this better, you are very welcome to make an issue or pull request to discuss it.
+This package defines parameters for [JutulDarcy.jl][JutulDarcy.jl] simulations using
+[Configurations.jl][Configurations.jl].
+
+The goal of this package is to make it easy to define parameters for JutulDarcy as a simple
+Julia file.
+
+See the beginning of [this example]
+(https://gbruer15.github.io/ConfigurationsJutulDarcy.jl/examples/simple-usage/) for the
+ease of defining relevant simulation parameters.
+
+[JutulDarcy.jl]: https://github.com/sintefmath/JutulDarcy.jl/
+[Configurations.jl]: https://github.com/Roger-luo/Configurations.jl/
 
 ## Repository Structure[^1]
 

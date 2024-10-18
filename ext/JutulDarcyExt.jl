@@ -54,7 +54,6 @@ import JutulDarcy.Jutul: find_enclosing_cells
 function JutulDarcy.setup_well(D::DataDomain, options::WellOptions; kwargs...)
     mesh = physical_representation(D)
     reservoir_cells = find_enclosing_cells(mesh, options.trajectory)
-    # Injector = setup_well(domain, wc, name = :Injector, simple_well = true)
     return setup_well(
         D, reservoir_cells; name=options.name, simple_well=options.simple_well, kwargs...
     )

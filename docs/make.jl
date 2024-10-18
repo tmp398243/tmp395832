@@ -114,13 +114,13 @@ makedocs(;
     source=DOC_STAGE,
     build=DOC_BUILD,
     format=Documenter.HTML(;
-        repolink="https://github.com/tmp398243/tmp395832",
-        canonical="https://tmp398243.github.io/tmp395832",
+        repolink="https://github.com/gbruer15/ConfigurationsJutulDarcy.jl",
+        canonical="https://gbruer15.github.io/ConfigurationsJutulDarcy.jl",
         edit_link="main",
         assets=String[],
         size_threshold=20 * 2^20,
     ),
-    repo="github.com/tmp398243/tmp395832",
+    repo="github.com/gbruer15/ConfigurationsJutulDarcy.jl",
     pages=[
         "Home" => "index.md",
         "Examples" => examples_markdown,

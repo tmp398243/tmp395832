@@ -17,8 +17,7 @@ This package defines parameters for [JutulDarcy.jl][JutulDarcy.jl] simulations u
 The goal of this package is to make it easy to define parameters for JutulDarcy as a simple
 Julia file.
 
-See the beginning of [this example]
-(https://gbruer15.github.io/ConfigurationsJutulDarcy.jl/examples/simple-usage/) for the
+See the beginning of [this example](https://gbruer15.github.io/ConfigurationsJutulDarcy.jl/examples/simple-usage/) for the
 ease of defining relevant simulation parameters.
 
 [JutulDarcy.jl]: https://github.com/sintefmath/JutulDarcy.jl/
